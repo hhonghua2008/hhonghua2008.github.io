@@ -64,6 +64,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vpn-method" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/23/vpn-method/" class="article-date">
+  <time datetime="2020-02-23T07:38:22.000Z" itemprop="datePublished">2020-02-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/23/vpn-method/">vpn method</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>yum remove -y pptpd ppp</p>
+<p>iptables –flush POSTROUTING –table nat<br>iptables –flush FORWARD</p>
+<p>rm -rf /etc/pptpd.conf<br>rm -rf /etc/ppp<br>yum -y install make libpcap iptables gcc-c++ logrotate tar cpio perl pam tcp_wrappers</p>
+<p>yum -y install ppp<br>yum -y install pptpd</p>
+<p>mknod /dev/ppp c 108 0</p>
+<p>echo 1 &gt; /proc/sys/net/ipv4/ip_forward<br>echo “mknod /dev/ppp c 108 0” &gt;&gt; /etc/rc.local<br>echo “echo 1 &gt; /proc/sys/net/ipv4/ip_forward” &gt;&gt; /etc/rc.local<br>echo “localip 172.16.36.1” &gt;&gt; /etc/pptpd.conf<br>echo “remoteip 172.16.36.2-254” &gt;&gt; /etc/pptpd.conf<br>echo “ms-dns 8.8.8.8” &gt;&gt; /etc/ppp/options.pptpd<br>echo “ms-dns 8.8.4.4” &gt;&gt; /etc/ppp/options.pptpd</p>
+<p>pass=<code>openssl rand 6 -base64</code></p>
+<p>if [ “$1” != “” ]<br>then pass=$1<br>fi</p>
+<p>echo “vpn pptpd ${pass} *” &gt;&gt; /etc/ppp/chap-secrets<br>iptables -t nat -A POSTROUTING -s 172.16.36.0/24 -j SNAT –to-source <code>ifconfig  | grep &#39;inet addr:&#39;| grep -v &#39;127.0.0.1&#39; | cut -d: -f2 | awk &#39;NR==1 { print $1}&#39;</code><br>iptables -A FORWARD -p tcp –syn -s 172.16.36.0/24 -j TCPMSS –set-mss 1356<br>service iptables save</p>
+<p>chkconfig iptables on<br>chkconfig pptpd on</p>
+<p>service iptables start<br>service pptpd start</p>
+<p>echo “VPN service is installed, your VPN username is vpn, VPN password is ${pass}”</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/23/vpn-method/" data-id="ck6yq1gl50000f4u6anxb8ccy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/02/22/hello-world/" class="article-date">
@@ -169,6 +217,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/02/23/vpn-method/">vpn method</a>
+          </li>
         
           <li>
             <a href="/2020/02/22/hello-world/">hello, 小柚子</a>
